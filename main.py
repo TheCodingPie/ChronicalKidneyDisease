@@ -256,7 +256,33 @@ feat_importances.nlargest(10).plot(kind='barh')
 plt.show()
 callAllClassifiers(d1[['hemo','htn','sg','al','dm','rbcc','pcv','appet','rbc','pcc','class']],'Obican samo sa Feature selectionom',True,0.3)
 
-#Lasso regularizacija
+Data = MinMaxScale(d1).loc[:, d1.columns != 'class']
+target = pd.DataFrame()
+target['class'] = d1['class']
+model=ExtraTreesClassifier(n_estimators=10)
 
+model.fit(Data,target)
+
+feat_importances = pd.Series(model.feature_importances_, index=Data.columns)
+print(feat_importances)
+feat_importances.nlargest(10).plot(kind='barh')
+plt.show()
+callAllClassifiers(d1[['hemo','htn','sg','al','dm','rbcc','pcv','appet','rbc','pcc','class']],'Obican samo sa Feature selectionom',True,0.3)
+
+
+plt.figure(figsize=(16,5))
+print('Regular data')
+sea.heatmap(d1.corr(), annot = True,fmt='.1g')
+plt.show()
+print('Min max scaler data')
+sea.heatmap(MinMaxScale(d1).corr(), annot = True)
+plt.show()
+print('Standard scaler data')
+sea.heatmap(StandardScale(d1).corr(), annot = True)
+plt.show()
+print('No outlier data')
+sea.heatmap(nominalToNumeric(dataWoOutliers).corr(), annot = True)
+
+plt.show()
 
 #Reducing Features Feature extraction
